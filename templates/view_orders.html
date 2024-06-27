@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User View Orders</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        /* Style table header cells */
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        /* Style table data cells */
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        /* Style alternate rows with background color */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style the unordered list inside table data cell */
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        /* Style list items inside unordered list */
+        ul li {
+            list-style-type: none;
+        }
+
+        /* Style total amount cell */
+        .total-amount {
+            font-weight: bold;
+        }
+        .status-cell {
+            font-weight: bold;
+            color: #006600; /* Green color for delivered status */
+        }
+    </style>
+</head>
+<body>
+    <h1>Orders</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Order Date</th>
+                <th>Order Items</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Action</th> <!-- New column for action buttons -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in user_orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>
+                    <ul>
+                        {% for item in order.items.all %}
+                        <li>{{ item.product.name }} - {{ item.quantity }} - ${{ item.item_price }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td class="total-amount">${{ order.total_amount }}</td>
+                <td class="status-cell">{{ order.status }}</td>
+                <td>
+                    {% if order.status == 'delivered' and order.order_date|date:"U" > thirty_days_ago|date:"U" %}
+                        <a href="{% url 'shop:return_order' order.id %}">Return</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No orders found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

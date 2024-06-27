@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View Orders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        /* Style table header cells */
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        /* Style table data cells */
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        /* Style alternate rows with background color */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Style the unordered list inside table data cell */
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        /* Style list items inside unordered list */
+        ul li {
+            list-style-type: none;
+        }
+
+        /* Style total amount cell */
+        .total-amount {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Orders</h1>
+    <a href="{% url 'custom_admin:view_returns' %}" class="btn btn-primary">Returns</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Order Date</th>
+                <th>Order Items</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>
+                    <ul>
+                        {% for item in order.items.all %}
+                        <li>{{ item.product.name }} - {{ item.quantity }} - ${{ item.item_price }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td class="total-amount">${{ order.total_amount }}</td>
+                <!-- Add more columns as needed -->
+                <td>
+                    <!-- Separate forms for each status update -->
+                    <form action="{% url 'custom_admin:update_status_processing' order.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" {% if order.status == 'processing' %} class="hidden" {% endif %}>Processing</button>
+                    </form>
+                    <form action="{% url 'custom_admin:update_status_shipped' order.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" {% if order.status == 'shipped' %} class="hidden" {% endif %}>Shipped</button>
+                    </form>
+                    <form action="{% url 'custom_admin:update_status_delivered' order.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" {% if order.status == 'delivered' %} class="hidden" {% endif %}>Delivered</button>
+                    </form>
+                    <form action="{% url 'custom_admin:update_status_returned' order.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" {% if order.status == 'returned' %} class="hidden" {% endif %}>Returned</button>
+                    </form>
+                </td>
+                <td>{{ order.status }}</td>
+                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No orders found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- JavaScript code to handle status update -->
+    
+</body>
+</html>

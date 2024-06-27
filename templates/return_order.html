@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Order</title>
+</head>
+<body>
+    <h1>Return Order</h1>
+    <div>
+        <h2>Product Details</h2>
+        <p>Product Name: {{ order_item.product.name }}</p>
+        <p>Quantity: {{ order_item.quantity }}</p>
+        <p>Price per Unit: ${{ order_item.item_price }}</p>
+        <p>Total Price: ${{ order_item.quantity|floatformat:2 }}</p>
+    </div>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Return Request</button>
+    </form>
+</body>
+</html>

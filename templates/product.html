@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    {{ product.description|truncatewords:155 }}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ product.name }} - Rayban
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 text-center">
+            <div style="min-width: 18rem;">
+                <!-- Display main product image -->
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 50%;">
+
+                <!-- Display additional images -->
+                {% for additional_image in product.additional_images.all %}
+                    <img src="{{ additional_image.url }}" alt="{{ product.name }}" class="additional-image" style="max-width: 100%; display: none;">
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <h1 class="my_prod_title" style="font-size: 24px; font-weight: bold;">{{ product.name }}</h1>
+
+            <p>${{ product.price }}</p>
+            <h6><b>Product Description:</b></h6>
+            <p class="text-justify my_prod_text">{{ product.description }}</p>
+            <h6><b>Product Colour:</b></h6>
+            <p class="text-justify my_prod_text">{{ product.color }}</p>
+            <h6><b>Size:</b></h6>
+            <p class="text-justify my_prod_text">{{ product.size }}</p>
+
+            {% if product.stock == 0 %}
+                <p class="text-justify my_prod_text"><b>Out Of Stock!</b></p>
+            {% else %}
+                {% if user.is_authenticated %}
+                    <a class="btn btn btn-outline-secondary" href="{% url 'cart:add_cart' product.id %}"><b>Add to Cart</b></a>
+                {% else %}
+                    <a class="btn btn btn-outline-secondary" href="{% url 'shop:login' %}"><b>Login to Add to Cart</b></a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <h3>You May Also Like</h3>
+    <div class="row">
+        {% for related_product in related_products %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card">
+                <img src="{{ related_product.image.url }}" class="card-img-top" alt="{{ related_product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ related_product.name }}</h5>
+                    <p class="card-text">${{ related_product.price }}</p>
+                    <a href="{% url 'shop:prodcatdetail' c_slug=related_product.category.slug product_slug=related_product.slug %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        function toggleImages() {
+            $(".additional-image").toggle();
+        }
+    });
+</script>
+{% endblock %}

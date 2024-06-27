@@ -1,0 +1,66 @@
+{% load static %}
+<style>
+  .navbar,
+  .navbar-nav,
+  .navbar-nav a,
+  .form-control,
+  .btn {
+      font-family: 'Times', sans-serif; /* Replace 'Your Desired Font' with the actual font name you want to use */
+  }
+  
+
+  /* Add other font-related styling as needed */
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" data-bs-theme="grey">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'shop:allprodcat' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Bootstrap"  height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'shop:allprodcat' %}">Home</a>
+        </li>
+        
+        {% for cat in links %}
+            <li><a class="nav-link" href="{{ cat.get_url }}">{{ cat.name }}</a></li>
+        {% endfor %}
+        
+        <form class="d-flex" role="search" action="{% url 'searchapp:searchresult' %}" method="get">
+          {% csrf_token %}
+          <input class="form-control me-2" type="search" placeholder="Search" name="q" aria-label="Search">
+          <button class="btn btn-outline-secondary" type="submit"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+        </form>
+        <a class="nav-link" href="">Ray_ban Official Clone India</a>
+        {% if user.is_authenticated %}
+          <a class="nav-link" href="{% url 'shop:logout' %}">Logout</a>
+        {% else %}
+          <a class="nav-link" href="{% url 'shop:login' %}">Login</a>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+          <div class="dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              Hello {{ user.first_name }} {% if item_count > 0 %}({{ item_count }}){% endif %}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{% url 'shop:view_orders' %}">Orders</a></li>
+              <li><a class="dropdown-item" href="{% url 'shop:view_profile' %}">Manage Profile</a></li>
+            </ul>
+          </div>
+        {% endif %}
+      
+      {% if item_count > 0 %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fa-sharp fa-solid fa-cart-shopping" style="font-size: 24px;"></i>({{item_count}})</a>
+      </li>
+      {% endif %}
+      
+      
+    </div>
+  </div>
+</nav>
+

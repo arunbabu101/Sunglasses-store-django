@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reorders List</title>
+    <style>
+        /* CSS styles for the table */
+        table {
+            width: 80%;
+            margin: auto; /* Center the table horizontally */
+            border-collapse: collapse;
+            border: 2px solid black; /* Thick border for the whole table */
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 2px solid black; /* Thick borders for cells */
+        }
+        th.title {
+            text-align: center;
+            background-color: lightgray;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid black; /* Thick border at the bottom of the title row */
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th class="title" colspan="5">Reorders List</th>
+            </tr>
+            <tr>
+                <th>Supplier Name</th>
+                <th>Product Name</th>
+                <th>Pieces</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reorder in reorders %}
+            <tr>
+                <td>{{ reorder.supplier.name }}</td>
+                <td>{{ reorder.product.name }}</td>
+                <td>{{ reorder.pieces }}</td>
+                <td>{{ reorder.get_status_display }}</td>
+                <td>
+                    {% if reorder.status == 'updated' %}
+                        Stock updated
+                    {% elif reorder.status == 'sent' %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="reorder_id" value="{{ reorder.id }}">
+                            <button type="submit">Add to Shop</button>
+                        </form>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No reorders found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

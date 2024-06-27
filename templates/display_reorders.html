@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Reorders</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        form {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Reorders Placed by Admin</h1>
+        <a href="{% url 'supplier:previous_reorders' %}">Previous Reorders</a>
+
+        <ul>
+            {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+            {% for reorder in reorders %}
+            <li>
+                <strong>Product:</strong> {{ reorder.product.name }}<br>
+                <strong>Supplier:</strong> {{ reorder.supplier.name }}<br>
+                <strong>Pieces:</strong> {{ reorder.pieces }}<br>
+                <strong>Created At:</strong> {{ reorder.created_at }}<br>
+                <!-- Button to send products -->
+                <form method="POST" action="{% url 'supplier:send_product' reorder.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Send Products</button>
+                </form>
+                <!-- Button to cancel reorder -->
+                <form method="POST" action="{% url 'supplier:cancel_reorder' reorder.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Cancel Reorder</button>
+                </form>
+            </li>
+            {% empty %}
+            <li>No reorders placed yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

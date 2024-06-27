@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <!-- Include Bootstrap CSS if needed -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4">Add Product</h1>
+        <form method="post" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}" class="control-label">Product Name:</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.slug.id_for_label }}" class="control-label">Slug:</label>
+                {{ form.slug }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}" class="control-label">Description:</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.price.id_for_label }}" class="control-label">Price:</label>
+                {{ form.price }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}" class="control-label">Category:</label>
+                {{ form.category }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.supplier.id_for_label }}" class="control-label">Supplier:</label>
+                {{ form.supplier }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.color.id_for_label }}" class="control-label">Product Color:</label>
+                {{ form.color }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.size.id_for_label }}" class="control-label">Product Size:</label>
+                {{ form.size }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}" class="control-label">Image:</label>
+                {{ form.image }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.stock.id_for_label }}" class="control-label">Stock:</label>
+                {{ form.stock }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.reorder.id_for_label }}" class="control-label">Reorder-limit:</label>
+                {{ form.reorder }}
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="{{ form.available.id_for_label }}" {{ form.available }}>
+                <label class="form-check-label" for="{{ form.available.id_for_label }}">Available</label>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Add Product</button>
+        </form>
+    </div>
+
+    <!-- Include Bootstrap JS and jQuery if needed -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function addMoreImages() {
+            var clonedInput = $("#additionalImagesContainer input:first").clone();
+            $("#additionalImagesContainer").append(clonedInput);
+        }
+
+        $(document).ready(function() {
+            $(document).on('change', 'input[name^="additionalImages"]', function() {
+                var imageContainer = $('#imagePreviewContainer');
+                imageContainer.empty();
+
+                $(this.files).each(function(index, file) {
+                    var img = $("<img>").attr("src", URL.createObjectURL(file)).addClass("preview-image");
+                    imageContainer.append(img);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

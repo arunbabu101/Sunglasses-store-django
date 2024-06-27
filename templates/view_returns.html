@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Orders</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Return Orders</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Reason</th>
+                <th>Return Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for return in returns %}
+            <tr>
+                <td>{{ return.order_item.order.id }}</td>
+                <td>{{ return.order_item.product.name }}</td>
+                <td>{{ return.order_item.quantity }}</td>
+                <td>{{ return.reason }}</td>
+                <td>{{ return.return_date }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No returns found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
